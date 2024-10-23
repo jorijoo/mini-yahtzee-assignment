@@ -1,20 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'
+import { View } from 'react-native'
+import { appContainer } from './styles/styles'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import Gameboard from './components/navigation/screens/Gameboard'
+import { PaperProvider } from 'react-native-paper'
+import { useState } from 'react'
+import en_GB from './constants/en_GB.json'
+import LanguageContext from './components/context/LanguageContext'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	const [locale, setLocale] = useState(en_GB)
+
+	return (
+		<PaperProvider>
+			<LanguageContext.Provider value={[locale, setLocale]}>
+				<View style={appContainer}>
+					<Header />
+					<Gameboard />
+					<StatusBar style="auto" />
+					<Footer />
+				</View>
+			</LanguageContext.Provider >
+		</PaperProvider>
+	)
+}
