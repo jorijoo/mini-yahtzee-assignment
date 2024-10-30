@@ -1,0 +1,9 @@
+{
+	"DICE": 5,
+	"ROUNDS": 3,
+	"WINNING_POINTS": 23,
+	"MIN_SPOT": 1,
+	"MAX_SPOT": 6,
+	"BONUS_POINTS_LIMIT": 63,
+	"BONUS_POINTS": 50
+}

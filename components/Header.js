@@ -1,12 +1,17 @@
 import { View } from "react-native"
 import { Text } from "react-native-paper"
 import styles from "../styles/styles"
+import LanguageContext from "./context/LanguageContext"
+import { useContext } from "react"
 
 const Header = () => {
+
+	const [LOCALE] = useContext(LanguageContext)
+
 	return (
 		<View style={styles.header}>
 			<Text>
-				Asdfasdasdsad
+				{LOCALE.HEADER}
 			</Text>
 		</View>
 	)

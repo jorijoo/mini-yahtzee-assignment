@@ -1,28 +1,36 @@
 import { StatusBar } from 'expo-status-bar'
 import { View } from 'react-native'
 import { appContainer } from './styles/styles'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Gameboard from './components/navigation/screens/Gameboard'
 import { PaperProvider } from 'react-native-paper'
 import { useState } from 'react'
 import en_GB from './constants/en_GB.json'
 import LanguageContext from './components/context/LanguageContext'
+import GameContext from './components/context/GameContext'
+import NavigationContext from './components/context/NavigationContext'
+import BotNav from './components/navigation/BotNav'
+import { NavigationContainer } from '@react-navigation/native'
 
 export default function App() {
 
 	const [locale, setLocale] = useState(en_GB)
+	const [gamestate, setGamestate] = useState({ username: '' })
+	const [screenNmb, setScreenNmb] = useState(0)
 
 	return (
 		<PaperProvider>
-			<LanguageContext.Provider value={[locale, setLocale]}>
-				<View style={appContainer}>
-					<Header />
-					<Gameboard />
-					<StatusBar style="auto" />
-					<Footer />
-				</View>
-			</LanguageContext.Provider >
-		</PaperProvider>
+			<NavigationContext.Provider value={[screenNmb, setScreenNmb]}>
+				<NavigationContainer>
+					<LanguageContext.Provider value={[locale, setLocale]}>
+						<GameContext.Provider value={[gamestate, setGamestate]}>
+							<View style={appContainer}>
+								<StatusBar style="auto" />
+								{/* <Footer /> */}
+								<BotNav />
+							</View>
+						</GameContext.Provider>
+					</LanguageContext.Provider >
+				</NavigationContainer>
+			</NavigationContext.Provider>
+		</PaperProvider >
 	)
 }

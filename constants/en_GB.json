@@ -1,4 +1,10 @@
 {
 	"AUTHOR": "Author",
-	"AUTHOR_NAMES": "Jori Hiltunen"
+	"AUTHOR_NAMES": "Jori Hiltunen",
+	"HEADER": "Mini-Yahtzee",
+	"BOTTOM_NAV": {
+		"HOME": "Home",
+		"GAMEBOARD": "Yahtzee!",
+		"SCOREBOARD": "High score"
+	}
 }
