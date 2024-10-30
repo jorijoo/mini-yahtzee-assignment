@@ -15,18 +15,18 @@ import GameContext from "../../context/GameContext"
 import NavigationContext from "../../context/NavigationContext"
 
 const Home = () => {
-	const [username, setUsername] = useState('')
 	const [user, setUser] = useState(false)
 	const [gamestate, setGamestate] = useContext(GameContext)
-	const [, setScreenNmb]= useContext(NavigationContext)
+	const [, setScreenNmb] = useContext(NavigationContext)
+
+	const handleName = (name) => {
+		setGamestate({ ...gamestate, username: name })
+	}
 
 	const handleNameSave = () => {
-		console.log(username)
 		console.log(gamestate)
-		setUsername(() => username.trim())
-		setGamestate(() => username.trim())
 
-		if (username.trim().length > 0) {
+		if (gamestate.username.trim().length > 0) {
 			setUser(!user)
 			Keyboard.dismiss()
 		}
@@ -34,7 +34,7 @@ const Home = () => {
 
 	const handleReset = () => {
 		setUser(!user)
-		setUsername('')
+		handleName('')
 	}
 
 	return (
@@ -45,8 +45,8 @@ const Home = () => {
 					<Headline>Your name for the scoreboard:</Headline>
 					<TextInput
 						label={'Username'}
-						value={username}
-						onChangeText={name => setUsername(name)}
+						value={gamestate.username}
+						onChangeText={name => handleName(name)}
 						autoFocus={true} />
 					<Button
 						mode={'outlined'}
@@ -83,7 +83,7 @@ const Home = () => {
 						points more.
 
 					</Text>
-					<Headline>Good luck, {username}</Headline>
+					<Headline>Good luck, {gamestate.username}</Headline>
 					<Button
 						mode={'outlined'}
 						onPress={() => setScreenNmb(1)}
