@@ -8,7 +8,6 @@ import LanguageContext from './components/context/LanguageContext'
 import GameContext from './components/context/GameContext'
 import NavigationContext from './components/context/NavigationContext'
 import BotNav from './components/navigation/BotNav'
-import { NavigationContainer } from '@react-navigation/native'
 
 export default function App() {
 
@@ -19,7 +18,6 @@ export default function App() {
 	return (
 		<PaperProvider>
 			<NavigationContext.Provider value={[screenNmb, setScreenNmb]}>
-				<NavigationContainer>
 					<LanguageContext.Provider value={[locale, setLocale]}>
 						<GameContext.Provider value={[gamestate, setGamestate]}>
 							<View style={appContainer}>
@@ -29,7 +27,6 @@ export default function App() {
 							</View>
 						</GameContext.Provider>
 					</LanguageContext.Provider >
-				</NavigationContainer>
 			</NavigationContext.Provider>
 		</PaperProvider >
 	)
