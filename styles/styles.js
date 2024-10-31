@@ -4,7 +4,7 @@ import CONSTANTS from 'expo-constants'
 // Define global screen styles
 const screens = StyleSheet.create({
 	flex: 1,
-	backgroundColor: '#99f'
+	// backgroundColor: '#99f'
 })
 
 // Styles

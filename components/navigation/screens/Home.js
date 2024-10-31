@@ -49,7 +49,7 @@ const Home = () => {
 						onChangeText={name => handleName(name)}
 						autoFocus={true} />
 					<Button
-						mode={'outlined'}
+						mode={'contained-tonal'}
 						onPress={handleNameSave}
 					>
 						Next
@@ -85,7 +85,7 @@ const Home = () => {
 					</Text>
 					<Headline>Good luck, {gamestate.username}</Headline>
 					<Button
-						mode={'outlined'}
+						mode={'contained-tonal'}
 						onPress={() => setScreenNmb(1)}
 					>
 						PLAY

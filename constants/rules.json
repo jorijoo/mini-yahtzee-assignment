@@ -1,6 +1,6 @@
 {
 	"DICE": 5,
-	"ROUNDS": 3,
+	"ROLLS": 3,
 	"WINNING_POINTS": 23,
 	"MIN_SPOT": 1,
 	"MAX_SPOT": 6,
