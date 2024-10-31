@@ -1,11 +1,9 @@
-import { Pressable, View } from "react-native"
-import { Button, Dialog, Divider, Headline, Icon, Portal, Text } from "react-native-paper"
+import { Pressable, View, Image } from "react-native"
+import { Button, Dialog, Headline, Icon, Portal, Text } from "react-native-paper"
 import styles from "../../../styles/styles"
 import {
 	DICE,
 	ROLLS,
-	WINNING_POINTS,
-	MIN_SPOT,
 	MAX_SPOT,
 	BONUS_POINTS_LIMIT,
 	BONUS_POINTS
@@ -14,61 +12,68 @@ import { useContext, useEffect, useState } from "react"
 import GameContext from "../../context/GameContext"
 
 const Gameboard = () => {
+
+	const [gamestate] = useContext(GameContext)
+
+	const [visible, setVisible] = useState(false)
+	const toggleDialog = () => setVisible(!visible)
+
 	const [rollsLeft, setRollsLeft] = useState(ROLLS)
-	const [wins, setWins] = useState(0)
 	const [sum, setSum] = useState(0)
+	const [total, setTotal] = useState(0)
 	const [status, setStatus] = useState('Throw dice')
 	const [board, setBoard] = useState(new Array(DICE).fill(''))
 	const [selectedDice, setSelectedDice] = useState(new Array(DICE).fill(false))
-
-	const [points, setPoints] = useState(new Array(MAX_SPOT).fill(''))
 	const [assignedPoints, setAssignedPoints] = useState(new Array(MAX_SPOT).fill(null))
 
-	const [gamestate, setGamestate] = useContext(GameContext)
 
-	// useEffect(() => throwDice(), [])
-
-	// useEffect(() => console.log({ board }), [board])
+	const points = new Array(MAX_SPOT).fill('')
+	const textVariant = 'titleLarge'
 
 	useEffect(() => {
-		// checkWinner()
-		if (rollsLeft === ROLLS) setStatus('Game has not started')
 		if (rollsLeft < 0) {
-			setRollsLeft(ROLLS)
-			setWins(0)
+			setRollsLeft(ROLLS - 1)
+		}
+
+		if (rollsLeft === ROLLS) {
+			setStatus('Roll dice to begin')
+		} else if (rollsLeft > 0) {
+			setStatus('Roll dice')
+		} else {
+			setStatus('Assign points')
 		}
 	}, [rollsLeft])
 
-	// useEffect(() => {board.map((i) => console.log(i.icon))}, [board])
+	useEffect(() => {
+		setTotal((sum >= BONUS_POINTS_LIMIT) ? sum + BONUS_POINTS : sum)
+	}, [sum])
 
-	// const checkWinner = () => {
-	// 	if (sum >= WINNING_POINTS) {
-	// 		setWins(wins + 1)
-	// 		setStatus('You won')
-	// 	}
-	// 	else if (sum >= WINNING_POINTS && rollsLeft === 0) {
-	// 		setWins(wins + 1)
-	// 		setStatus('You won, game over')
-	// 	}
-	// 	else if (wins > 0 && rollsLeft === 0) {
-	// 		setStatus('You won, game over')
-	// 	}
-	// 	else if (rollsLeft === 0) {
-	// 		setWins(wins + 1)
-	// 		setStatus('Game over')
-	// 	}
-	// 	else {
-	// 		setStatus('Keep playing')
-	// 	}
-	// }
+	useEffect(() => {
+		if (assignedPoints.indexOf(null) === -1) {
+			setStatus('Game is over, play again?')
+			toggleDialog()
+		}
+	}, [assignedPoints])
+
+	const resetGame = () => {
+		toggleDialog()
+
+		setRollsLeft(ROLLS)
+		setSum(0)
+		setStatus('Throw dice')
+		setBoard(board.fill(''))
+		setSelectedDice(selectedDice.fill(false))
+		setAssignedPoints(assignedPoints.fill(null))
+	}
 
 	const RollButton = () => {
 		return (
 			<Button
+				style={styles.button}
 				mode={'contained-tonal'}
 				disabled={rollsLeft < 1}
 				onPress={() => rollDice()}>
-				<Text>Button</Text>
+				<Text variant="displayLarge" style={styles.customFont}>ROLL DICE</Text>
 			</Button>
 		)
 	}
@@ -114,7 +119,7 @@ const Gameboard = () => {
 								// disabled={rollsLeft === 0}
 								onPress={() => handleDiePress(i)}>
 								<Icon
-									color={selectedDice[i] ? 'black' : 'steelblue'}
+									color={selectedDice[i] ? 'steelblue' : 'orange'}
 									source={`dice-${die.value}`}
 									size={70} />
 							</Pressable>
@@ -172,9 +177,9 @@ const Gameboard = () => {
 							key={i}
 							// disabled={(assignedPoints[i] !== null || rollsLeft !== 0)}
 							onPress={() => handlePointsPress(i)}>
-							<Headline>{assignedPoints[i]}</Headline>
+							<Text style={styles.customFont} variant={textVariant}>{assignedPoints[i]}</Text>
 							<Icon
-								color={assignedPoints[i] != null ? 'black' : 'steelblue'}
+								color={assignedPoints[i] != null ? 'steelblue' : 'orange'}
 								source={`numeric-${i + 1}-circle`}
 								size={50} />
 						</Pressable>
@@ -186,15 +191,40 @@ const Gameboard = () => {
 
 	return (
 		<View style={styles.gameboard}>
-			<Points />
-			<Headline>Total points: {sum}</Headline>
-			<Text>Rolls left: {rollsLeft}</Text>
-			<Text>Wins: {wins}</Text>
-			<Headline>{status}</Headline>
+			<Portal>
+				<Dialog visible={visible} onDismiss={toggleDialog}>
+					<Dialog.Title>Game over</Dialog.Title>
+					<Dialog.Content>
+						<Text style={styles.customFont} variant="displayMedium">Your score is: </Text>
+						<Text style={styles.customFont} variant="displayLarge">{total} </Text>
+					</Dialog.Content>
+					<Dialog.Actions>
+						<Button style={styles.customFont} onPress={resetGame}>Play again</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
+			<View style={styles.flex1}>
+				<Points />
+			</View>
+			{
+				rollsLeft === ROLLS && <Image
+					style={[styles.logo, styles.flex1]}
+					resizeMode="contain"
+					source={require('../../../assets/miniy.png')} />
+			}
+			<View style={styles.flex1}>
+				<Text style={styles.customFont} variant={textVariant}>Total points: {total}</Text>
+				<Text style={styles.customFont} variant={textVariant}>{(sum < BONUS_POINTS_LIMIT) ? `You are ${BONUS_POINTS_LIMIT - sum} points away from bonus points` : `Bonus of ${BONUS_POINTS} added to your points`}</Text>
+				<Text style={styles.customFont} variant={textVariant}>Rolls left: {rollsLeft}</Text>
+				<Text style={styles.customFont} variant={textVariant}>Tip:</Text>
+				<Text style={styles.customFont} variant={textVariant}>{status}</Text>
+			</View>
 			<Dice />
-			<RollButton />
-			<Text>Player: {gamestate.username}</Text>
-		</View>
+			<View style={styles.flex1}>
+				<RollButton />
+				<Text style={styles.customFont} variant={textVariant}>Player: {gamestate.username}</Text>
+			</View>
+		</View >
 	)
 }
 
