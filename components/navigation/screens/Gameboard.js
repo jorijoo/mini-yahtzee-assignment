@@ -1,5 +1,5 @@
 import { Pressable, View, Image } from "react-native"
-import { Button, Dialog, Headline, Icon, Portal, Text } from "react-native-paper"
+import { Button, Dialog, Icon, Portal, Text } from "react-native-paper"
 import styles from "../../../styles/styles"
 import {
 	DICE,

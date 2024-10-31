@@ -13,7 +13,6 @@ const BotNav = () => {
 	const [index, setIndex] = useContext(NavigationContext)
 	const [routes] = useState(BotNavRoutes())
 	const [gamestate] = useContext(GameContext)
-	console.log(gamestate)
 
 	return (
 		<BottomNavigation

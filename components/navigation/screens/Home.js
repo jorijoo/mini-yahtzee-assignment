@@ -1,8 +1,6 @@
 import { useState, useContext } from "react"
 import { Image, Keyboard, View } from "react-native"
-import { Button, Headline, Text, TextInput } from "react-native-paper"
-import Header from "../../Header"
-import Footer from "../../Footer"
+import { Button, Text, TextInput } from "react-native-paper"
 import {
 	DICE,
 	ROUNDS,
@@ -27,8 +25,6 @@ const Home = () => {
 	}
 
 	const handleNameSave = () => {
-		console.log(gamestate)
-
 		if (gamestate.username.trim().length > 0) {
 			setUser(!user)
 			Keyboard.dismiss()
