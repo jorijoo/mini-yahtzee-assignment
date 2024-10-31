@@ -1,5 +1,5 @@
 import { Pressable, View } from "react-native"
-import { Button, Divider, Headline, Icon, Text } from "react-native-paper"
+import { Button, Dialog, Divider, Headline, Icon, Portal, Text } from "react-native-paper"
 import styles from "../../../styles/styles"
 import {
 	DICE,
@@ -24,11 +24,6 @@ const Gameboard = () => {
 	const [points, setPoints] = useState(new Array(MAX_SPOT).fill(''))
 	const [assignedPoints, setAssignedPoints] = useState(new Array(MAX_SPOT).fill(null))
 
-	const [dicePlaces, setDicePlaces] = useState(new Array(DICE).fill(0))
-
-	const [selectedDicePoints, setSelecetedDicePoints] = useState(new Array(MAX_SPOT).fill(false))
-	const [dicePointsTotal, setDicePointsTotal] = useState(new Array(MAX_SPOT).fill(0))
-
 	const [gamestate, setGamestate] = useContext(GameContext)
 
 	// useEffect(() => throwDice(), [])
@@ -36,7 +31,7 @@ const Gameboard = () => {
 	// useEffect(() => console.log({ board }), [board])
 
 	useEffect(() => {
-		checkWinner()
+		// checkWinner()
 		if (rollsLeft === ROLLS) setStatus('Game has not started')
 		if (rollsLeft < 0) {
 			setRollsLeft(ROLLS)
@@ -46,26 +41,26 @@ const Gameboard = () => {
 
 	// useEffect(() => {board.map((i) => console.log(i.icon))}, [board])
 
-	const checkWinner = () => {
-		if (sum >= WINNING_POINTS) {
-			setWins(wins + 1)
-			setStatus('You won')
-		}
-		else if (sum >= WINNING_POINTS && rollsLeft === 0) {
-			setWins(wins + 1)
-			setStatus('You won, game over')
-		}
-		else if (wins > 0 && rollsLeft === 0) {
-			setStatus('You won, game over')
-		}
-		else if (rollsLeft === 0) {
-			setWins(wins + 1)
-			setStatus('Game over')
-		}
-		else {
-			setStatus('Keep playing')
-		}
-	}
+	// const checkWinner = () => {
+	// 	if (sum >= WINNING_POINTS) {
+	// 		setWins(wins + 1)
+	// 		setStatus('You won')
+	// 	}
+	// 	else if (sum >= WINNING_POINTS && rollsLeft === 0) {
+	// 		setWins(wins + 1)
+	// 		setStatus('You won, game over')
+	// 	}
+	// 	else if (wins > 0 && rollsLeft === 0) {
+	// 		setStatus('You won, game over')
+	// 	}
+	// 	else if (rollsLeft === 0) {
+	// 		setWins(wins + 1)
+	// 		setStatus('Game over')
+	// 	}
+	// 	else {
+	// 		setStatus('Keep playing')
+	// 	}
+	// }
 
 	const RollButton = () => {
 		return (
@@ -116,6 +111,7 @@ const Gameboard = () => {
 							<Pressable
 								style={styles.dice_icon}
 								key={die.key}
+								// disabled={rollsLeft === 0}
 								onPress={() => handleDiePress(i)}>
 								<Icon
 									color={selectedDice[i] ? 'black' : 'steelblue'}
@@ -134,19 +130,38 @@ const Gameboard = () => {
 		const handlePointsPress = (i) => {
 			const pips = +i + 1
 
-			// Extract face values
-			const values = board.map((x) => x.value)
+			if (rollsLeft > 0) {
 
-			// Sum values of selected pips
-			const outcome = values.reduce((prev, next) => ((next === pips) ? prev + next : prev), 0)
+				setStatus(`Roll the dice ${rollsLeft} more ${rollsLeft == 1 ? 'time' : 'times'}`)
 
-			// Assign 
-			const points = [...assignedPoints]
-			points[i] = assignedPoints[i] === null ? outcome : null
-			setAssignedPoints(points)
-			setSum(sum + points[i])
-			setRollsLeft(ROLLS)
+			} else {
+
+				if (assignedPoints[i] === null) {
+
+					// Extract face values
+					const values = board.map((x) => x.value)
+
+					// Sum values of selected pips
+					const outcome = values.reduce((prev, next) => ((next === pips) ? prev + next : prev), 0)
+
+					// Assign 
+					const points = [...assignedPoints]
+					points[i] = assignedPoints[i] === null ? outcome : null
+					setAssignedPoints(points)
+					setSum(sum + points[i])
+					setRollsLeft(ROLLS)
+					setSelectedDice(selectedDice.fill(false))
+					rollDice()
+
+				} else {
+
+					setStatus(`You already selected points for ${pips}`)
+
+				}
+
+			}
 		}
+
 
 		return (
 			<View style={styles.dice_row}>
@@ -155,7 +170,7 @@ const Gameboard = () => {
 						<Pressable
 							style={styles.dice_icon}
 							key={i}
-							disabled={assignedPoints[i] !== null}
+							// disabled={(assignedPoints[i] !== null || rollsLeft !== 0)}
 							onPress={() => handlePointsPress(i)}>
 							<Headline>{assignedPoints[i]}</Headline>
 							<Icon
@@ -171,13 +186,14 @@ const Gameboard = () => {
 
 	return (
 		<View style={styles.gameboard}>
-			<Dice />
-			<Text>Sum: {sum}</Text>
+			<Points />
+			<Headline>Total points: {sum}</Headline>
 			<Text>Rolls left: {rollsLeft}</Text>
 			<Text>Wins: {wins}</Text>
-			<Text>Status: {status}</Text>
-			<Points />
+			<Headline>{status}</Headline>
+			<Dice />
 			<RollButton />
+			<Text>Player: {gamestate.username}</Text>
 		</View>
 	)
 }
