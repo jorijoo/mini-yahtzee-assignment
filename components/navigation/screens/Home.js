@@ -20,12 +20,20 @@ const Home = () => {
 	const [, setScreenNmb] = useContext(NavigationContext)
 
 	const handleName = (name) => {
-		setGamestate({ ...gamestate, username: name })
+		setGamestate({ 
+			...gamestate, 
+			username: name,
+			scoreboard: [
+				{ player: 'Jori', score: 400, key: '1' },
+				{ player: 'Jori', score: 405, key: '2' },
+				{ player: 'Jori', score: 543, key: '3' },
+				{ player: 'Homer', score: 545, key: '4' } ,
+			],
+			score: 0
+		})
 	}
 
 	const handleNameSave = () => {
-		console.log(gamestate)
-
 		if (gamestate.username.trim().length > 0) {
 			setUser(!user)
 			Keyboard.dismiss()

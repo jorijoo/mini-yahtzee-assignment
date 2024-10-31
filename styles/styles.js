@@ -4,6 +4,7 @@ import CONSTANTS from 'expo-constants'
 // Define global screen styles
 const screens = StyleSheet.create({
 	flex: 1,
+	marginHorizontal: 50,
 	// backgroundColor: '#99f'
 })
 
@@ -22,6 +23,9 @@ const styles = StyleSheet.create({
 	},
 	gameboard: {
 		...screens,
+	},
+	scoreboard: {
+		...screens
 	},
 	dice_row: {
 		flexDirection: 'row',

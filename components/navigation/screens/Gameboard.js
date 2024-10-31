@@ -28,7 +28,6 @@ const Gameboard = () => {
 
 	// useEffect(() => throwDice(), [])
 
-	// useEffect(() => console.log({ board }), [board])
 
 	useEffect(() => {
 		// checkWinner()
@@ -39,7 +38,6 @@ const Gameboard = () => {
 		}
 	}, [rollsLeft])
 
-	// useEffect(() => {board.map((i) => console.log(i.icon))}, [board])
 
 	// const checkWinner = () => {
 	// 	if (sum >= WINNING_POINTS) {
