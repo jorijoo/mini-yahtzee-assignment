@@ -22,7 +22,8 @@ const BotNavRoutes = () => {
 			{
 				key: 'scoreboard',
 				title: LOCALE.BOTTOM_NAV.SCOREBOARD,
-				unfocusedIcon: 'format-list-numbered'
+				unfocusedIcon: 'format-list-numbered',
+				focusedIcon: 'view-list'
 			}
 		]
 	)
