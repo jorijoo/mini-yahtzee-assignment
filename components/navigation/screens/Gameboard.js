@@ -192,7 +192,7 @@ const Gameboard = () => {
 	return (
 		<View style={styles.gameboard}>
 			<Portal>
-				<Dialog visible={visible} onDismiss={toggleDialog}>
+				<Dialog visible={visible} onDismiss={resetGame}>
 					<Dialog.Title>Game over</Dialog.Title>
 					<Dialog.Content>
 						<Text style={styles.customFont} variant="displayMedium">Your score is: </Text>
@@ -219,7 +219,9 @@ const Gameboard = () => {
 				<Text style={styles.customFont} variant={textVariant}>Tip:</Text>
 				<Text style={styles.customFont} variant={textVariant}>{status}</Text>
 			</View>
-			<Dice />
+			{
+				rollsLeft !== ROLLS && <Dice />
+			}
 			<View style={styles.flex1}>
 				<RollButton />
 				<Text style={styles.customFont} variant={textVariant}>Player: {gamestate.username}</Text>
